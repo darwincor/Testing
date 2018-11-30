@@ -1,0 +1,7 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="btn_size">40dp</dimen>
+    <dimen name="player_radius">5dp</dimen>
+    <dimen name="option_icon_dimen">24dp</dimen>
+    <dimen name="option_text_height">48dp</dimen>
+</resources>

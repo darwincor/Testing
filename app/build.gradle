@@ -1,0 +1,58 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        android.defaultConfig.vectorDrawables.useSupportLibrary = true
+        applicationId "com.inglesdivino.simplemusicplayer"
+        minSdkVersion 14
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+
+    def room_version = "2.1.0-alpha02"
+    def lifecycle_version = "2.0.0"
+    def anko_version = "0.10.4"
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    implementation 'com.google.android.material:material:1.1.0-alpha01'
+    implementation 'com.android.support:design:28.0.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+
+    // Room components
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version" // use kapt for Kotlin
+
+    // Lifecycle components
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version" // ViewModel and LiveData
+    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version" // use kapt for Kotlin
+
+    //Anko
+    implementation "org.jetbrains.anko:anko-commons:$anko_version"
+
+    //Anko for custom views in Dialogs
+    implementation "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
+    implementation "org.jetbrains.anko:anko-sdk25:$anko_version"
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:minHeight="40dp"
+        android:layout_height="wrap_content">
+
+    <!-- Logo -->
+    <ImageView
+            android:id="@+id/folder_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="8dp"
+            app:srcCompat="@drawable/ic_folder_outline_24dp" android:paddingLeft="16dp" android:paddingRight="8dp"/>
+
+    <!-- Menu-->
+
+    <ImageView
+            android:id="@+id/folder_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingRight="8dp"
+            app:srcCompat="@drawable/ic_more_vert_24dp" android:paddingLeft="8dp"/>
+
+    <TextView
+            android:id="@+id/folder_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hola amigos, this is a test :)"
+            android:layout_toEndOf="@id/folder_logo"
+            android:layout_toStartOf="@id/folder_more"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:layout_toRightOf="@id/folder_logo"
+            android:layout_toLeftOf="@id/folder_more"/>
+
+</RelativeLayout>

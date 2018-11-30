@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CarouselTextView">
+        <attr name="carouselTextColor" format="integer"/>
+        <attr name="carouselText" format="string"/>
+    </declare-styleable>
+</resources>

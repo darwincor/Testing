@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_gravity="center_vertical"
+        android:minHeight="40dp"
+        android:gravity="center_vertical"
+        android:layout_height="wrap_content">
+
+    <!-- Logo -->
+    <ImageView
+            android:id="@+id/song_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="14dp"
+            android:paddingLeft="14dp"
+            android:paddingEnd="8dp"
+            android:paddingRight="8dp"
+            app:srcCompat="@drawable/ic_music_fuchsia_24dp"/>
+
+    <TextView
+            android:id="@+id/song_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hola amigos, this is a test :)"
+            android:layout_toEndOf="@id/song_logo"
+            android:layout_toStartOf="@id/song_more"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:layout_toRightOf="@id/song_logo"
+            android:layout_toLeftOf="@id/song_more"/>
+
+    <!-- Menu-->
+    <ImageView
+            android:id="@+id/song_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingEnd="8dp"
+            android:paddingRight="8dp"
+            android:paddingStart="8dp"
+            android:paddingLeft="8dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            app:srcCompat="@drawable/ic_more_vert_24dp"/>
+
+</RelativeLayout>

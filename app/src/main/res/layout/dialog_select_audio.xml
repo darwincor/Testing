@@ -1,0 +1,92 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/constraintLayout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<LinearLayout
+		android:id="@+id/linearLayout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical">
+
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="22sp"
+				android:textStyle="bold"
+				android:padding="16dp"
+				android:text="@string/add_songs" android:id="@+id/add_songs_title"/>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:orientation="horizontal">
+
+			<EditText
+				android:id="@+id/search_query"
+				android:layout_width="0px"
+				android:layout_height="wrap_content"
+				android:hint="@string/search_song"
+				android:layout_margin="8dip"
+				android:layout_weight="1"
+				android:inputType="text"
+				android:textColor="@color/textColorPrimary"
+				android:textSize="18sp" />
+
+		</LinearLayout>
+
+		<TextView
+				android:id="@+id/dialog_no_folders"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingTop="54dp"
+				android:padding="16dp"
+				android:layout_gravity="center_horizontal"
+				app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+				android:layout_marginEnd="8dp" android:layout_marginRight="8dp"/>
+
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/selectSongsList"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="1.0"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			android:paddingBottom="82dp"
+			android:clipToPadding="false"/>
+
+	</LinearLayout>
+
+	<!-- This params are used when using a fab button (put inside the RecyclerView params)
+    android:paddingBottom="82dp"
+    android:clipToPadding="false"-->
+
+	<com.google.android.material.floatingactionbutton.FloatingActionButton
+		android:id="@+id/fab_open_saf"
+		android:layout_width="40dp"
+		android:layout_height="40dp"
+		android:scaleType="center"
+		android:layout_marginBottom="16dp"
+		android:layout_marginEnd="16dp"
+		app:srcCompat="@drawable/ic_folder_24dp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		android:layout_marginRight="16dp" />
+	<Button
+            android:text="@string/add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_button"
+            android:textColor="@color/white"
+            android:id="@+id/play_songs" app:layout_constraintEnd_toEndOf="@+id/linearLayout"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="8dp" android:layout_marginStart="8dp" android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/linearLayout"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

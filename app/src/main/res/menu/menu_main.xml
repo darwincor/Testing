@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.inglesdivino.simplemusicplayer.MainActivity">
+
+    <item android:id="@+id/action_search"
+          android:icon="@drawable/ic_search_24dp"
+          android:title="@string/search_song"
+          app:showAsAction="ifRoom|collapseActionView"
+          app:actionViewClass="androidx.appcompat.widget.SearchView"/>
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+</menu>

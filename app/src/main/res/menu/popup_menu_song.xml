@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/rename_song"
+        android:title="@string/rename_song"
+        android:icon="@drawable/ic_rename_24dp"/>
+
+    <item
+        android:id="@+id/delete_song"
+        android:title="@string/delete_song"
+        android:icon="@drawable/ic_delete_24dp"/>
+</menu>

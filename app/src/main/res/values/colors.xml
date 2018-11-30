@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#000</color>
+    <color name="colorPrimaryDark">#000</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="aqua_trans">#AA00ffff</color>
+    <color name="fuchsia_trans">#AAff00ff</color>
+    <color name="aqua">#00ffff</color>
+    <color name="fuchsia">#ff00ff</color>
+    <color name="fuchsia_dark">#b30086</color>
+    <color name="purple">#cc66ff</color>
+    <color name="purple_dark1">#830096</color>
+
+    <color name="pink">#ff66ff</color>
+
+    <color name="purple_dark">#6600ff</color>
+    <color name="aqua_dark">#009999</color>
+    <color name="white">#FFF</color>
+    <color name="black">#000</color>
+
+    <color name="colorAccent_trans">#33D81B60</color>
+    <color name="aqua_dark_trans">#33009999</color>
+    <color name="aqua_dark_trans2">#66009999</color>
+
+    <color name="textColorPrimary">#DE000000</color>
+    <color name="textColorSecondary">#8A000000</color>
+    <color name="textColorDisabled">#61000000</color>
+    
+    <color name="text_color_medium">#99FFFFFF</color>
+
+    <color name="stroke_player_color">#00ffff</color>
+    <color name="fill_player_color">#CC000000</color>
+
+    <color name="option_icon_color">#B3FFFFFF</color>
+
+    <!-- pretty colors -->
+    <color name="first_color">#009999</color>
+
+</resources>
