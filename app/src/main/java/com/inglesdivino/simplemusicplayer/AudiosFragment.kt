@@ -465,12 +465,6 @@ class AudiosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
             no_audios.visibility = View.GONE
         }
 
-        //If audios are being filtered
-        if (searchQuery != "") {
-            filteredSongs = songs
-            markSelectedAudios(filteredSongs)
-        }
-
         songsAdapter?.setAudios(songs)
 
         //Mark the selected mAudios
@@ -508,7 +502,7 @@ class AudiosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
                 //On option clicked
                 holder.row_options_button.setOnClickListener {
                     val bundle = Bundle()
-                    bundle.putInt("action", 1)    //Action: long click
+                    bundle.putInt("action", 1)    //Action: Click in the more option
                     bundle.putInt("position", holder.adapterPosition)
                     bundle.putSerializable("song", song)
                     onItemAction(bundle)
