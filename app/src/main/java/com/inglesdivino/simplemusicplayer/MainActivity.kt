@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_player.*
 import org.jetbrains.anko.longToast
+import org.jetbrains.anko.searchView
 
 
 class MainActivity : AppCompatActivity() {
@@ -45,6 +46,9 @@ class MainActivity : AppCompatActivity() {
     private var filter = ""
     private var searchMenu: Menu? = null
     var searchMenuItem: MenuItem? = null
+    companion object {
+        var searchViewIsVisible: Boolean = false
+    }
 
     //Listeners
     var mOnQueryText: ((String) -> Unit)? = null
@@ -182,8 +186,6 @@ class MainActivity : AppCompatActivity() {
             STORAGE_REQUEST_CODE
         )
     }
-
-
 
     //Called when user wants to see the available folders
     private fun setOnShowFoldersListener() {
@@ -333,6 +335,20 @@ class MainActivity : AppCompatActivity() {
                 mOnQueryText?.invoke(p0)
                 /*if (mAudiosFragment != null)
                     mAudiosFragment?.filterByString(p0)*/
+                return true
+            }
+        })
+
+        //Listen when searchView is collapsed or expanded
+        searchMenuItem?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+            override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
+                searchViewIsVisible = true
+                return true
+            }
+
+            override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
+                searchViewIsVisible = false
+                mAudiosFragment?.onSearchViewCollapsed()
                 return true
             }
         })

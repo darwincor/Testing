@@ -1,12 +1,9 @@
 package com.inglesdivino.simplemusicplayer
 
-import android.content.Intent
 import android.database.Cursor
 import android.graphics.Color
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import androidx.loader.app.LoaderManager
@@ -26,7 +23,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
 import androidx.loader.content.CursorLoader
-import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.inglesdivino.dialogs.OptionsDialogFragment
 import com.inglesdivino.dialogs.PropertiesDialogFragment
@@ -130,7 +126,7 @@ class AudiosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         audiosList.layoutManager = LinearLayoutManager(context)
-        songsAdapter = SongsAdapter{performOnActionSong(it)}
+        songsAdapter = SongsAdapter()
         audiosList.adapter = songsAdapter
 
         //Load the mAudios
@@ -166,76 +162,6 @@ class AudiosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         fb.layoutParams = params
     }
 
-    //Performs the action when a song is clicked
-    private fun performOnActionSong(bundle: Bundle) {
-        val action = bundle.getInt("action")
-        val audio = bundle.getSerializable("song") as Audio
-        val position = bundle.getInt("position")
-        if (action == 0) {    //Click on item
-
-            //Ignore the click if the previous action was a long click 500 milliseconds ago.
-            if ((System.currentTimeMillis() - lastLongClick) < 500) {
-                return
-            }
-
-            if (songIsSelected(audio)) {
-                selected_audios = ArrayList(selected_audios.filterNot { it.id == audio.id })   //Remove the clicked song from the list of selected ones
-                songsAdapter!!.mAudios[position].selected = false
-                songsAdapter!!.notifyItemChanged(position)
-                if(!thereAreSelectedSongs()){}    //If there are not more selected mAudios, update the action bar
-                activity?.invalidateOptionsMenu()
-            } else {
-                if(thereAreSelectedSongs()){    //If there are selected mAudios, continue selecting
-                    selected_audios.add(audio)
-                    activity?.invalidateOptionsMenu()
-
-                    songsAdapter!!.mAudios[position].selected = true
-                    songsAdapter!!.notifyItemChanged(position)
-                }
-                else{   //Play audio or pause
-                    val song: Song = Song(-1, -1, audio.id, audio.title, audio.path)
-                    onPlayNewAudio?.invoke(song)
-                }
-            }
-        }
-        else if (action == 1) { //Click on the arrow of the item view
-            showOptionsDialogFragment(audio)
-        } else {           //Long click
-            if (!songIsSelected(audio)) {
-                selected_audios.add(audio)
-                activity?.invalidateOptionsMenu()
-
-                if(searchQuery == ""){ //Audios are not filtered
-                    songsAdapter!!.setItemSelected(position)
-                    songsAdapter!!.notifyItemHasChanged(position)
-                }
-                else{   //Songs are filtered
-                    Log.i("Darwincio_del", "filteredSongs.length = "+filteredSongs.size)
-                    val tmp: ArrayList<Audio> = ArrayList()
-                    tmp.add(filteredSongs[0])
-                    songsAdapter?.setAudios(tmp)
-                    //audiosList.adapter = songsAdapter
-                    songsAdapter!!.setItemSelected(0)
-                    songsAdapter?.notifyDataSetChanged()
-
-                    //songsAdapter?.notifyItemHasChanged(position)
-                }
-
-                //songsAdapter!!.setItemSelected(position)
-                //songsAdapter!!.notifyItemHasChanged(position)
-                //songsAdapter!!.notifyDataSetChanged()
-            }
-            lastLongClick = System.currentTimeMillis()
-        }
-        //Get the number of selected mAudios
-        if (selected_audios.size > 0) {
-            activity?.selected_counter?.visibility = View.VISIBLE
-            activity?.selected_counter?.text = selected_audios.size.toString()
-        } else {
-            activity?.selected_counter?.visibility = View.GONE
-        }
-    }
-
     fun showSelectFolderDialog() {
         mSelectFolderDialogFragment = SelectFolderDialogFragment()
         mSelectFolderDialogFragment?.setOnSelectedFolderListener { folder ->
@@ -250,7 +176,6 @@ class AudiosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     private fun showPropertiesDialogFragment(audio: Audio) {
         mPropertiesDialogFragment = PropertiesDialogFragment()
-
         mPropertiesDialogFragment = PropertiesDialogFragment()
         mPropertiesDialogFragment?.name_str = audio.title
         mPropertiesDialogFragment?.location_str = audio.path
@@ -314,8 +239,13 @@ class AudiosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     //Clear the selected mAudios
     fun clearSelectedSongs() {
         selected_audios.clear()
-        songsAdapter!!.mAudios.forEach { it.selected = false }
-        songsAdapter!!.notifyDataSetChanged()
+        songsAdapter?.mAudios?.forEachIndexed { index, audio ->
+            if(audio.selected)
+                songsAdapter?.setAudioUnselected(index)
+        }
+
+
+        //songsAdapter!!.notifyDataSetChanged() todo uncoment thsi
         activity?.invalidateOptionsMenu()
     }
 
@@ -465,6 +395,7 @@ class AudiosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
             no_audios.visibility = View.GONE
         }
 
+        //If audios are being filtered
         songsAdapter?.setAudios(songs)
 
         //Mark the selected mAudios
@@ -472,7 +403,7 @@ class AudiosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     //Class adapter
-    inner class SongsAdapter(val onItemAction: (Bundle) -> Unit): RecyclerView.Adapter<SongsAdapter.ViewHolder>() {
+    inner class SongsAdapter: RecyclerView.Adapter<SongsAdapter.ViewHolder>() {
 
         var mAudios: ArrayList<Audio> = ArrayList()
 
@@ -487,44 +418,70 @@ class AudiosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             //Surround access to mAudios' elements with try catch, because loaders can modify 'mAudios' asynchronously
-            Log.i("Darwincio_del_on", "onBindViewHolder() = position = "+position +" mAudios.size = "+mAudios.size)
             try {
-                val song = mAudios[position]
-                holder.row_title.text = song.title  //Tile
-                holder.row_artist.text = song.artist    //Artist
-                holder.row_album.text = song.album  //Album
+                val audio = mAudios[position]
+                holder.row_title.text = audio.title  //Tile
+                holder.row_artist.text = audio.artist    //Artist
+                holder.row_album.text = audio.album  //Album
 
-                if(song.selected)   //If the song is selected
+                if(audio.selected)   //If the song is selected
                     holder.itemView.setBackgroundColor(ContextCompat.getColor(context!!, R.color.aqua_dark_trans2))
                 else
                     holder.itemView.setBackgroundColor(Color.parseColor("#000000"))
 
                 //On option clicked
                 holder.row_options_button.setOnClickListener {
-                    val bundle = Bundle()
-                    bundle.putInt("action", 1)    //Action: Click in the more option
-                    bundle.putInt("position", holder.adapterPosition)
-                    bundle.putSerializable("song", song)
-                    onItemAction(bundle)
+                    showOptionsDialogFragment(audio)
                 }
 
                 //Show contextual menu on long press as well
-                holder.audio_row.setOnLongClickListener {
-                    /*val bundle = Bundle()
-                    bundle.putInt("action", 2)    //Action: long click
-                    bundle.putInt("position", holder.adapterPosition)
-                    bundle.putSerializable("song", song)
-                    onItemAction(bundle)*/
-                    setItemSelected(holder.adapterPosition)
-                    notifyItemHasChanged(holder.adapterPosition)
+                holder.itemView.setOnLongClickListener {v ->
+                    if (!songIsSelected(audio)) {
+                        selected_audios.add(audio)
+                        if(!MainActivity.searchViewIsVisible)
+                            activity?.invalidateOptionsMenu()
+                        mAudios[holder.adapterPosition].selected = true
+                    }
+
+                    notifyItemChanged(holder.adapterPosition)
+                    lastLongClick = System.currentTimeMillis()
+
                     false
                 }
-                holder.audio_row.setOnClickListener {
-                    val bundle = Bundle()
-                    bundle.putInt("action", 0)    //Action: click
-                    bundle.putInt("position", holder.adapterPosition)
-                    bundle.putSerializable("song", song)
-                    onItemAction(bundle)
+                holder.itemView.setOnClickListener {v ->
+                    //Ignore the click if the previous action was a long click 500 milliseconds ago.
+                    if ((System.currentTimeMillis() - lastLongClick) > 500) {
+                        if (songIsSelected(audio)) {
+                            selected_audios = ArrayList(selected_audios.filterNot { it.id == audio.id })   //Remove the clicked song from the list of selected ones
+                            mAudios[holder.adapterPosition].selected = false
+                            notifyItemChanged(holder.adapterPosition)
+                            if(!thereAreSelectedSongs()){    //If there are not more selected mAudios, update the action bar
+                                if(!MainActivity.searchViewIsVisible)
+                                    activity?.invalidateOptionsMenu()
+                            }
+
+                        } else {
+                            if(thereAreSelectedSongs()){    //If there are selected mAudios, continue selecting
+                                selected_audios.add(audio)
+                                if(!MainActivity.searchViewIsVisible)
+                                    activity?.invalidateOptionsMenu()
+                                mAudios[holder.adapterPosition].selected = true
+                                notifyDataSetChanged()
+                            }
+                            else{   //Play audio or pause
+                                val song = Song(-1, -1, audio.id, audio.title, audio.path)
+                                onPlayNewAudio?.invoke(song)
+                            }
+                        }
+                    }
+                }
+
+                //Get the number of selected mAudios
+                if (selected_audios.size > 0) {
+                    activity?.selected_counter?.visibility = View.VISIBLE
+                    activity?.selected_counter?.text = selected_audios.size.toString()
+                } else {
+                    activity?.selected_counter?.visibility = View.GONE
                 }
 
             } catch (e: Exception) {
@@ -548,7 +505,17 @@ class AudiosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
             notifyDataSetChanged()
         }
 
-        fun notifyItemHasChanged(pos: Int) {
+        fun setAudioSelected(position: Int) {
+            mAudios[position].selected = true
+            notifyItemChanged(position)
+        }
+
+        fun setAudioUnselected(position: Int) {
+            mAudios[position].selected = false
+            notifyItemChanged(position)
+        }
+
+        /*fun notifyItemHasChanged(pos: Int) {
             Log.i("Darwincio_del", "setItemSelected(): position = "+pos)
             Log.i("Darwincio_del", "setItemSelected(): mAudios.length = "+mAudios.size)
             notifyItemChanged(pos)
@@ -556,6 +523,12 @@ class AudiosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
         fun setItemSelected(position: Int) {
             mAudios[position].selected = true
+        }*/
+    }
+
+    fun onSearchViewCollapsed() {
+        if (thereAreSelectedSongs()) {
+            activity?.invalidateOptionsMenu()
         }
     }
 

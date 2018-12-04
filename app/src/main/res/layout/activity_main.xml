@@ -25,7 +25,6 @@
         <RelativeLayout
                 android:id="@+id/extendedOptions"
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_height="?attr/actionBarSize">
 
@@ -54,8 +53,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:paddingStart="12dp"
+                    android:paddingLeft="12dp"
                     android:paddingEnd="16dp"
+                    android:paddingRight="16dp"
                     android:contentDescription="@string/play"
                     app:srcCompat="@drawable/ic_play_circle_24dp"
                     tools:ignore="RtlCompat"/>
