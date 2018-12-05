@@ -500,6 +500,7 @@ class MainActivity : AppCompatActivity() {
 
     //todo delete this testing function
     fun sumValues() {
+        //Only branch02 has this testing comment
         val i = 0
         val ii = 1
     }
