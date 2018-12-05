@@ -495,4 +495,5 @@ class MainActivity : AppCompatActivity() {
         mOnQueryText = onQueryText
     }
     //This is a testing comment created on github :)
+    //TODO. Delete the comment above :)
 }
