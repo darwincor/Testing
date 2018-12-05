@@ -496,4 +496,5 @@ class MainActivity : AppCompatActivity() {
     }
     //This is a testing comment created on github :)
     //TODO. Delete the comment above :)
+    //todo. this comment must be deleted too. It was created only with testing purposes
 }
