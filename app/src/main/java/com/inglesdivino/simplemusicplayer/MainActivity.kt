@@ -494,4 +494,5 @@ class MainActivity : AppCompatActivity() {
     public fun setOnQueryTextListener(onQueryText: (String) -> Unit) {
         mOnQueryText = onQueryText
     }
+    //This is a testing comment created on github :)
 }
