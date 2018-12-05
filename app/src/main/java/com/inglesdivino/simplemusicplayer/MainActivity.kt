@@ -500,7 +500,7 @@ class MainActivity : AppCompatActivity() {
 
     //todo delete this testing function
     fun sumValues() {
-        val i = 0
+        val i = 10
         val ii = 1
     }
 }
