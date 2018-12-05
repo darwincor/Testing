@@ -503,5 +503,6 @@ class MainActivity : AppCompatActivity() {
         //Only branch02 has this testing comment
         val i = 20
         val ii = 100
+        //This is a new line added to test the pull request github feature
     }
 }
