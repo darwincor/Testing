@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.view.menu.MenuBuilder
@@ -18,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.inglesdivino.dialogs.SelectAudioDialogFragment
 import kotlinx.android.synthetic.main.fragment_songs.*
-import org.jetbrains.anko.runOnUiThread
+import org.jetbrains.anko.*
 import java.lang.Exception
 import java.util.*
 import kotlin.concurrent.schedule
@@ -234,7 +235,7 @@ class SongsFragment : Fragment() {
         menu.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.rename_song -> {
-                    //todo rename song
+                    showRenameSongDialog(mMainSongs?.get(pos))
                 }
                 R.id.delete_song -> {
                     //todo confirm song deletion
@@ -247,6 +248,36 @@ class SongsFragment : Fragment() {
             false
         }
         menuHelper.show()
+    }
+
+    //Show a dialog to rename a song
+    private fun showRenameSongDialog(song: Song?) {
+        activity?.alert{
+            title=getString(R.string.rename_folder)
+            var etRename: EditText? = null
+            customView {
+                verticalLayout {
+                    etRename = editText{
+                        singleLine = true
+                        hintResource = R.string.song_name
+                        setText(song?.name)
+                        setSelectAllOnFocus(true)
+                    }
+                    padding = dip(16)
+                }
+            }
+            positiveButton(R.string.ok) {
+                if (etRename?.text.isNullOrBlank()) {
+                    activity?.toast(R.string.invalid_name)
+                } else {
+                    val newName = etRename?.text.toString().trim()
+                    song?.name = newName
+                    mPlayerViewModel?.updateSong(song)
+                }
+            }
+            negativeButton(R.string.cancel){}
+
+        }?.show()
     }
 
     fun setOnSelectSongs(onSelectSongs: (List<Song>, Int) -> Unit) {

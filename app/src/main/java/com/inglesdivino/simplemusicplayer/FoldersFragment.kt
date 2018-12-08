@@ -38,7 +38,7 @@ class FoldersFragment : Fragment() {
 
     var mainFoldersList: List<Folder>? = null
 
-    var lastDeletedIndex: Int = -1  //Index of the last deleted folder (if -1, no folder has been deleted)
+    var lastModifiedIndex: Int = -1  //Index of the last modified (or deleted) folder (if -1, no folder has been deleted)
 
     //Variables to avoid nulling the long click
     private var lastLongClick: Long = 0
@@ -76,35 +76,70 @@ class FoldersFragment : Fragment() {
         })
 
         //Create a new folder
-        new_folder.setOnClickListener{
-            activity?.alert{
-                title=getString(R.string.create_folder)
-                var fn: EditText? = null
-                customView {
-                    verticalLayout {
-                        fn = editText{
-                            singleLine = true
-                            hintResource = R.string.folder_name
-                        }
-                        padding = dip(16)
-                    }
-                }
-                positiveButton(R.string.create) {
-                    if (fn?.text.isNullOrBlank()) {
-                        activity?.toast(R.string.invalid_name)
-                    } else {
-                        val folder = Folder(0, fn?.text.toString().trim(), System.currentTimeMillis(), System.currentTimeMillis())
-                        mPlayerViewModel?.insertFolder(folder)
-                    }
-                }
-                negativeButton(R.string.cancel){}
-
-            }?.show()
-        }
+        new_folder.setOnClickListener{showCreateFolderDialog()}
 
         //Adjust the margins of the floating button
         adjustFloatingButton(new_folder)
     }
+
+    //Show a dialog to create a new folder
+    private fun showCreateFolderDialog() {
+        activity?.alert{
+            title=getString(R.string.create_folder)
+            var fn: EditText? = null
+            customView {
+                verticalLayout {
+                    fn = editText{
+                        singleLine = true
+                        hintResource = R.string.folder_name
+                    }
+                    padding = dip(16)
+                }
+            }
+            positiveButton(R.string.create) {
+                if (fn?.text.isNullOrBlank()) {
+                    activity?.toast(R.string.invalid_name)
+                } else {
+                    val folder = Folder(0, fn?.text.toString().trim(), System.currentTimeMillis(), System.currentTimeMillis())
+                    mPlayerViewModel?.insertFolder(folder)
+                }
+            }
+            negativeButton(R.string.cancel){}
+
+        }?.show()
+    }
+
+    //Show a dialog to rename a folder
+    private fun showRenameFolderDialog(folder: Folder?) {
+        activity?.alert{
+            title=getString(R.string.rename_folder)
+            var etRename: EditText? = null
+            customView {
+                verticalLayout {
+                    etRename = editText{
+                        singleLine = true
+                        hintResource = R.string.folder_name
+                        setText(folder?.name)
+                        setSelectAllOnFocus(true)
+                    }
+                    padding = dip(16)
+                }
+            }
+            positiveButton(R.string.ok) {
+                if (etRename?.text.isNullOrBlank()) {
+                    activity?.toast(R.string.invalid_name)
+                } else {
+                    val newName = etRename?.text.toString().trim()
+                    folder?.name = newName
+                    mPlayerViewModel?.updateFolder(folder)
+                }
+            }
+            negativeButton(R.string.cancel){}
+
+        }?.show()
+    }
+
+
 
     private fun performOnActionSong(view: View, folder: Folder?, bundle: Bundle) {
         val action = bundle.getInt("action")
@@ -229,10 +264,11 @@ class FoldersFragment : Fragment() {
         fun setFolders(folders: List<Folder>) {
             mFolders = folders
 
-            if (lastDeletedIndex >= 0) {
+            Log.i("Darwincio_del", "Modifying folder: lastModifiedIndex = "+lastModifiedIndex)
+            if (lastModifiedIndex >= 0) {
                 try {
-                    notifyItemRemoved(lastDeletedIndex)
-                    lastDeletedIndex = -1
+                    notifyItemRemoved(lastModifiedIndex)
+                    lastModifiedIndex = -1
                 }catch (ignored: Exception){notifyDataSetChanged()}
             }
             else
@@ -266,14 +302,15 @@ class FoldersFragment : Fragment() {
                     showSelectAudioDialog(mainFoldersList?.get(pos))
                 }
                 R.id.rename_folder -> {
-                    //todo rename folder
+                    showRenameFolderDialog(mainFoldersList?.get(pos))
+                    //lastModifiedIndex = pos
+                    //Timer("resetFolderIndex", false).schedule(300){lastModifiedIndex = -1}   //Reset the index after a certain time
                 }
                 R.id.delete_folder -> {
                     //todo ask for confirmation
                     mPlayerViewModel?.deleteFolder(mainFoldersList?.get(pos))
-                    lastDeletedIndex = pos
-                    //Reset the index after a certain time
-                    Timer("resetFolderIndex", false).schedule(300){lastDeletedIndex = -1}
+                    lastModifiedIndex = pos
+                    Timer("resetFolderIndex", false).schedule(300){lastModifiedIndex = -1}   //Reset the index after a certain time
                 }
             }
             false

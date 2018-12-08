@@ -32,6 +32,9 @@ interface FolderDao{
     @Delete
     fun deleteFolder(folder: Folder?)
 
+    @Update
+    fun updateFolder(folder: Folder?)
+
     @Query("SELECT * FROM Folder ORDER BY name COLLATE NOCASE ASC")
     fun getAll(): LiveData<List<Folder>>
 
@@ -49,6 +52,9 @@ interface SongDao {
 
     @Delete
     fun deleteSong(song: Song?)
+
+    @Update
+    fun updateSong(song: Song?)
 
     @Query("SELECT * FROM Song")
     fun getAll(): LiveData<List<Song>>

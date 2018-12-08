@@ -16,6 +16,8 @@ public class Repository(context: Context) {
     }
     fun insertFolder(folder: Folder) = doAsync {mFolderDao?.insertFolder(folder)}
     fun deleteFolder(folder: Folder?) = doAsync { mFolderDao?.deleteFolder(folder) }
+    fun updateFolder(folder: Folder?) = doAsync { mFolderDao?.updateFolder(folder) }
     fun insertSong(song: Song) = doAsync { mSongDao?.insertSong(song) }
     fun deleteSong(song: Song?) = doAsync { mSongDao?.deleteSong(song) }
+    fun updateSong(song: Song?) = doAsync { mSongDao?.updateSong(song) }
 }

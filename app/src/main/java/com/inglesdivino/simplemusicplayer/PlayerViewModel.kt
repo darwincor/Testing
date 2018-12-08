@@ -14,6 +14,8 @@ class PlayerViewModel (application: Application): AndroidViewModel(application){
     }
     fun insertFolder(folder: Folder) = mRepository.insertFolder(folder)
     fun deleteFolder(folder: Folder?) = mRepository.deleteFolder(folder)
+    fun updateFolder(folder: Folder?) = mRepository.updateFolder(folder)
     fun insertSong(song: Song) = mRepository.insertSong(song)
     fun deleteSong(song: Song?) = mRepository.deleteSong(song)
+    fun updateSong(song: Song?) = mRepository.updateSong(song)
 }

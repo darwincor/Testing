@@ -10,6 +10,7 @@
     <string name="skip_previous">Skip previous</string>
     <string name="cannnot_play_audio">Audio can\'t be played</string>
     <string name="create_folder">Create folder</string>
+    <string name="rename_folder">Rename folder</string>
     <string name="folder_name">Folder name</string>
     <string name="invalid_name">Invalid name</string>
     <string name="create">Create</string>
@@ -18,6 +19,7 @@
     <string name="no_matches">No matches found</string>
     <string name="add_songs">Add songs %1$s</string>
     <string name="add_songs_">Add songs</string>
+    <string name="song_name">Song name</string>
     <string name="add">Add</string>
     <string name="search_song">Search songs…</string>
     <string name="permission_warning">The storage permission is need to read the songs in your device!</string>
@@ -25,7 +27,6 @@
     <string name="empty_folder">Empty folder</string>
     <string name="delete_folder">Delete folder</string>
     <string name="delete_song">Remove song</string>
-    <string name="rename_folder">Rename folder</string>
     <string name="rename_song">Rename song</string>
     <string name="songs_added_successfully">Songs added successfully</string>
     <string name="select_folder">Select folder</string>
