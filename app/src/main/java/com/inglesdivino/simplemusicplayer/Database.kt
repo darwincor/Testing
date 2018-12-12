@@ -67,6 +67,11 @@ interface SongDao {
 
     @Query("SELECT * FROM Song where id_folder = :folder_id")
     fun getSongsInFolder(folder_id: Int?): LiveData<List<Song>>
+
+    @Query("SELECT * FROM Song where id_folder = :folder_id")
+    fun getSongsInFolderNoLive(folder_id: Int?): List<Song>
+
+
 }
 
 @Database(entities = [Folder::class, Song::class], version = 1)

@@ -11,9 +11,8 @@ public class Repository(context: Context) {
     private val mAllFolders: LiveData<List<Folder>>? = mFolderDao?.getAll()
     //private val mAllSongs: LiveData<List<Song>>? = mSongDao?.getAll()
     fun getAllFolders(): LiveData<List<Folder>>? = mAllFolders
-    fun getSongsInFolder(folder: Folder?): LiveData<List<Song>>? {
-        return mSongDao?.getSongsInFolder(folder?.id)
-    }
+    fun getSongsInFolder(folder: Folder?): LiveData<List<Song>>? = mSongDao?.getSongsInFolder(folder?.id)
+    fun getSongsInFolderNoLive(folder: Folder?): List<Song>? = mSongDao?.getSongsInFolderNoLive(folder?.id)
     fun insertFolder(folder: Folder) = doAsync {mFolderDao?.insertFolder(folder)}
     fun deleteFolder(folder: Folder?) = doAsync { mFolderDao?.deleteFolder(folder) }
     fun updateFolder(folder: Folder?) = doAsync { mFolderDao?.updateFolder(folder) }

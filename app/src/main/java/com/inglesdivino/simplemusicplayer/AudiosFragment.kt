@@ -10,7 +10,6 @@ import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.Menu
@@ -30,7 +29,9 @@ import com.inglesdivino.dialogs.SelectFolderDialogFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_player.*
 import kotlinx.android.synthetic.main.fragment_songs_viewer.*
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
+import org.jetbrains.anko.uiThread
 import java.lang.StringBuilder
 import kotlin.collections.ArrayList
 
@@ -38,6 +39,7 @@ class AudiosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
 
     //Player View Model
     public var mPlayerViewModel: PlayerViewModel? = null
+
 
     //Songs adapter
     //var songsAdapter: SongsAdapter? = null
@@ -59,6 +61,9 @@ class AudiosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     //String to filter songs
     var searchQuery: String = ""
     var filteredSongs = ArrayList<Audio>()
+
+    //List with the songs of the selected folder (when moving selected audios to an specific folder)
+    var folderSongs: List<Song>? = null
 
     //Songs player
     private val player = Player()
@@ -165,11 +170,9 @@ class AudiosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
     fun showSelectFolderDialog() {
         mSelectFolderDialogFragment = SelectFolderDialogFragment()
         mSelectFolderDialogFragment?.setOnSelectedFolderListener { folder ->
-            selected_audios.forEach {audio ->
-                val song = Song(0, folder?.id?:0, audio.id, audio.title, audio.path)
-                mPlayerViewModel?.insertSong(song)
-            }
-            activity?.toast(R.string.songs_added_successfully)
+
+            //Inserts only the songs that are not in the folder yet
+            insertSelectedSongsIntoFolder(folder)
         }
         mSelectFolderDialogFragment?.show(activity?.supportFragmentManager, "mSelectFolderDialogFragment")
     }
@@ -194,6 +197,29 @@ class AudiosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
         mOptionsDialogFragment?.show(activity?.supportFragmentManager, "mOptionsDialogFragment")
     }
 
+    //Get songs from a given folder
+    private fun insertSelectedSongsIntoFolder(folder: Folder?) {
+        doAsync {
+            folderSongs =  mPlayerViewModel?.getSongsInFolderNoLive(folder)
+
+            selected_audios.forEach {audio ->
+                //Add the song to the folder only if it's not already in it
+                if (!isSongInFolder(audio)) {
+                    val song = Song(0, folder?.id?:0, audio.id, audio.title, audio.path)
+                    mPlayerViewModel?.insertSong(song)
+                }
+            }
+            uiThread {
+                activity?.toast(R.string.songs_added_successfully)
+                clearSelectedSongs()
+            }
+        }
+    }
+
+    //Check if a given audio is already in the list of songs of the selected folder (where selected songs will be moved)
+    fun isSongInFolder(audio: Audio): Boolean {
+        return folderSongs?.any {it.media_id == audio.id}?:false
+    }
     private fun performOnOptionClicked(option: Int, audio: Audio) {
         when (option) {
             OptionsDialogFragment.OPT_PLAY -> playOneSong(audio)

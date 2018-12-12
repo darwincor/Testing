@@ -9,9 +9,9 @@ class PlayerViewModel (application: Application): AndroidViewModel(application){
     private val mAllFolders: LiveData<List<Folder>>? = mRepository.getAllFolders()
 
     fun getAllFolders(): LiveData<List<Folder>>? = mAllFolders
-    fun getSonsInFolder(folder: Folder?): LiveData<List<Song>>? {
-        return mRepository.getSongsInFolder(folder)
-    }
+    fun getSongsInFolder(folder: Folder?): LiveData<List<Song>>? = mRepository.getSongsInFolder(folder)
+    fun getSongsInFolderNoLive(folder: Folder?): List<Song>? = mRepository.getSongsInFolderNoLive(folder)
+
     fun insertFolder(folder: Folder) = mRepository.insertFolder(folder)
     fun deleteFolder(folder: Folder?) = mRepository.deleteFolder(folder)
     fun updateFolder(folder: Folder?) = mRepository.updateFolder(folder)

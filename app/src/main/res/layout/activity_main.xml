@@ -91,7 +91,7 @@
 
     </FrameLayout>
 
-    <LinearLayout
+    <RelativeLayout
             android:id="@+id/lay_player_compressed"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -111,7 +111,31 @@
                 custom:carouselTextColor="#FFF"
                 custom:carouselText = "Hola"/>
 
-    </LinearLayout>
+        <ImageView
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:scaleType="fitXY"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/gradient_left"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="1dp"/>
+
+        <ImageView
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:layout_marginEnd="1dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/gradient_right"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="1dp"/>
+
+    </RelativeLayout>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

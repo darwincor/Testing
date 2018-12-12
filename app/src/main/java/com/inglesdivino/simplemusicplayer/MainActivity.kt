@@ -441,7 +441,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
-
     }
 
     public fun setFragmentTitle(title: String) {
