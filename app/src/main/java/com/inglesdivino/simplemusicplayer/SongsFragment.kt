@@ -141,8 +141,9 @@ class SongsFragment : Fragment() {
         }*/
     }
 
-    private fun showSelectAudioDialog() {
+    public fun showSelectAudioDialog() {
         mSelectAudioDialogFragment = SelectAudioDialogFragment()
+        mSelectAudioDialogFragment?.setCurrentSongs(mMainSongs)
         mSelectAudioDialogFragment?.setOnSelectedSongs {selected_audios ->
             selected_audios.forEach {
                 val song = Song(0, mFolder?.id!!, it.id, it.title, it.path)
@@ -176,7 +177,7 @@ class SongsFragment : Fragment() {
             }
             else{
                 //Covers the case of data not being ready yet
-                holder.songName.text = "No Song"
+                holder.songName.text = getString(R.string.no_song)
             }
             //On option clicked
             holder.songMore.setOnClickListener {

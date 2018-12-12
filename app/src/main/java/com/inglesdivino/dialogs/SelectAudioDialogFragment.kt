@@ -23,10 +23,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.inglesdivino.simplemusicplayer.Audio
-import com.inglesdivino.simplemusicplayer.PlayerViewModel
-import com.inglesdivino.simplemusicplayer.R
-import com.inglesdivino.simplemusicplayer.afterTextChanged
+import com.inglesdivino.simplemusicplayer.*
 import org.jetbrains.anko.toast
 import java.lang.StringBuilder
 
@@ -81,6 +78,9 @@ class SelectAudioDialogFragment: DialogFragment(), LoaderManager.LoaderCallbacks
 
     //List of general mAudios (trimmed and not trimmed)
     internal var songs = ArrayList<Audio>()
+
+    //Current audios
+    private var currentSongs: List<Song>?= null //Songs already included in the folder
 
     //Variables to avoid nulling the long click
     private var lastLongClick: Long = 0
@@ -166,7 +166,7 @@ class SelectAudioDialogFragment: DialogFragment(), LoaderManager.LoaderCallbacks
     //Performs the action when a song is clicked
     private fun performOnActionSong(bundle: Bundle) {
         val action = bundle.getInt("action")
-        val song = bundle.getSerializable("song") as Audio
+        val audio = bundle.getSerializable("song") as Audio
         val position = bundle.getInt("position")
         if (action == 0) {    //Click on item
             //Ignore the click if the previous action was a long click 500 milliseconds ago.
@@ -174,14 +174,20 @@ class SelectAudioDialogFragment: DialogFragment(), LoaderManager.LoaderCallbacks
                 return
             }
 
-            if (!songIsSelected(song)) {
-                selected_audios.add(song)
+            //If the audio is already in the folder, show a message
+            if (isAudioInFolder(audio)) {
+                Toast.makeText(context, R.string.song_in_folder, Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            if (!songIsSelected(audio)) {
+                selected_audios.add(audio)
                 //songsAdapter!!.audios[position].selected = true
                 songsAdapter!!.setSelectedItem(position)
                 songsAdapter!!.notifyItemChanged(position)
             }
             else{
-                selected_audios = ArrayList(selected_audios.filterNot { it.id == song.id })   //Remove the clicked song from the list of selected ones
+                selected_audios = ArrayList(selected_audios.filterNot { it.id == audio.id })   //Remove the clicked song from the list of selected ones
                 //songsAdapter!!.audios[position].selected = false
                 songsAdapter!!.setUnselectedItem(position)
                 songsAdapter!!.notifyItemChanged(position)
@@ -230,9 +236,9 @@ class SelectAudioDialogFragment: DialogFragment(), LoaderManager.LoaderCallbacks
                 "(" + selection + " AND " +
                 "((TITLE LIKE ?) OR (ARTIST LIKE ?) OR (ALBUM LIKE ?)))"
             )
-            selectionArgList?.add(filter)
-            selectionArgList?.add(filter)
-            selectionArgList?.add(filter)
+            selectionArgList.add(filter)
+            selectionArgList.add(filter)
+            selectionArgList.add(filter)
         }
 
 
@@ -351,6 +357,13 @@ class SelectAudioDialogFragment: DialogFragment(), LoaderManager.LoaderCallbacks
             if(selected_audios.any { it.id == audio.id})
                 audio.selected = true
         }
+    }
+
+    //Checks if a given audio is already in the current list of songs
+    private fun isAudioInFolder(audio: Audio): Boolean {
+        return if(currentSongs != null) {
+            currentSongs!!.any { it.media_id == audio.id}
+        } else false
     }
 
     //Class adapter
@@ -475,6 +488,11 @@ class SelectAudioDialogFragment: DialogFragment(), LoaderManager.LoaderCallbacks
                 }
             }
         }
+    }
+
+    //Set the current songs of the current folder
+    fun setCurrentSongs(curAudios: List<Song>?) {
+        currentSongs = curAudios
     }
 
     fun setOnSelectedSongs(onSelectedSongs: (ArrayList<Audio>) -> Unit) {

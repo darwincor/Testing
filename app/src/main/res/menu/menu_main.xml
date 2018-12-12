@@ -10,8 +10,8 @@
           app:actionViewClass="androidx.appcompat.widget.SearchView"/>
 
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:id="@+id/action_add_songs"
+        android:icon="@drawable/ic_add_songs_white_24dp"
+        android:title="@string/add_songs_"
+        app:showAsAction="ifRoom" />
 </menu>

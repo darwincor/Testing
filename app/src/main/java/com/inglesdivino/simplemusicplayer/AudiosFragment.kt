@@ -288,9 +288,9 @@ class AudiosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
                 "(" + selection + " AND " +
                         "((TITLE LIKE ?) OR (ARTIST LIKE ?) OR (ALBUM LIKE ?)))"
             )
-            selectionArgList?.add(filter)
-            selectionArgList?.add(filter)
-            selectionArgList?.add(filter)
+            selectionArgList.add(filter)
+            selectionArgList.add(filter)
+            selectionArgList.add(filter)
         }
 
 
@@ -514,16 +514,6 @@ class AudiosFragment : Fragment(), LoaderManager.LoaderCallbacks<Cursor> {
             mAudios[position].selected = false
             notifyItemChanged(position)
         }
-
-        /*fun notifyItemHasChanged(pos: Int) {
-            Log.i("Darwincio_del", "setItemSelected(): position = "+pos)
-            Log.i("Darwincio_del", "setItemSelected(): mAudios.length = "+mAudios.size)
-            notifyItemChanged(pos)
-        }
-
-        fun setItemSelected(position: Int) {
-            mAudios[position].selected = true
-        }*/
     }
 
     fun onSearchViewCollapsed() {

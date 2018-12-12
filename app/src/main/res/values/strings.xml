@@ -36,7 +36,8 @@
     <string name="name">Name</string>
     <string name="song_properties">Song properties</string>
     <string name="ok">OK</string>
-
+    <string name="song_in_folder">This song is already included in this folder</string>
+    <string name="no_song">No song</string>
     <!-- Context menu items -->
     <string name="context_menu_rename">Rename</string>
     <string name="context_menu_delete">Delete</string>

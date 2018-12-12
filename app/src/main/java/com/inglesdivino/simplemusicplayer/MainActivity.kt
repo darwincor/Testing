@@ -361,7 +361,10 @@ class MainActivity : AppCompatActivity() {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.action_add_songs ->{
+                mSongsFragment?.showSelectAudioDialog()
+                true
+            }
             R.id.action_search -> {
                 /*val searchView = (searchMenu?.findItem(R.id.action_search)?.actionView as SearchView)
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -375,12 +378,26 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
 
-        if (mAudiosFragment?.isVisible == true) {
+        //Set all menu items visible by default
+        menu?.findItem(R.id.action_search)?.isVisible = true
+        menu?.findItem(R.id.action_add_songs)?.isVisible = true
+
+        if (mAudiosFragment?.isVisible == true) {   //Audios Fragment is visible
+            menu?.findItem(R.id.action_add_songs)?.isVisible = false
+
             if (mAudiosFragment!!.thereAreSelectedSongs())
                 showSelectedSongsOptions()
             else
                 hideSelectedSongsOptions()
         }
+        else if (mFoldersFragment?.isVisible == true) {     //Folders fragment is visible
+            menu?.findItem(R.id.action_search)?.isVisible = false
+            menu?.findItem(R.id.action_add_songs)?.isVisible = false
+        }
+        else if (mSongsFragment?.isVisible == true) {   //Songs fragment is visible
+            menu?.findItem(R.id.action_search)?.isVisible = false
+        }
+
         return super.onPrepareOptionsMenu(menu)
     }
 
