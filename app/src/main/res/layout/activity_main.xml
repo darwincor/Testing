@@ -108,15 +108,16 @@
                 android:layout_height="match_parent"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
+                android:layout_marginStart="1dp"
+                android:layout_marginEnd="1dp"
                 custom:carouselTextColor="#FFF"
                 custom:carouselText = "Hola"/>
 
         <ImageView
-                android:layout_width="5dp"
-                android:layout_height="match_parent"
+                android:layout_width="8dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
                 android:layout_marginStart="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginBottom="1dp"
                 android:scaleType="fitXY"
                 android:layout_alignParentStart="true"
                 android:src="@drawable/gradient_left"
@@ -124,12 +125,13 @@
                 android:layout_marginLeft="1dp"/>
 
         <ImageView
-                android:layout_width="5dp"
-                android:layout_height="match_parent"
+                android:layout_width="8dp"
+                android:layout_height="30dp"
                 android:scaleType="fitXY"
                 android:layout_marginEnd="1dp"
                 android:layout_marginTop="1dp"
                 android:layout_marginBottom="1dp"
+                android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
                 android:src="@drawable/gradient_right"
                 android:layout_alignParentRight="true"
