@@ -2,6 +2,12 @@ package com.inglesdivino.simplemusicplayer
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.annotation.SuppressLint
+import android.app.PendingIntent.getActivity
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -10,21 +16,24 @@ import android.view.*
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.ImageView
 import android.widget.SeekBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.ViewModelProviders
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_player.*
+import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.searchView
 
 
 class MainActivity : AppCompatActivity() {
-
+    //Todo add the "create folder" option when moving songs from the main activity
     //Player View Model
     var mPlayerViewModel: PlayerViewModel? = null
 
@@ -116,6 +125,9 @@ class MainActivity : AppCompatActivity() {
             mAudiosFragment?.showSelectFolderDialog()
         }
         play_sel_songs.setOnClickListener { mAudiosFragment?.playSelectedSongs() }
+
+        //Register broadcast receiver
+        registerBroadcastReceiver()
     }
 
 
@@ -229,11 +241,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun startPlayList(songs: List<Song>, pos: Int) {
-        currentPlaylist = songs
+        /*currentPlaylist = songs
         startPosition = pos
         currentPosition = pos
         val songToPlay = songs[pos]
-        onPlayNewAudio(songToPlay)
+        onPlayNewAudio(songToPlay)*/
+        startPlaylistOnService(songs)
     }
 
     //Called when user wants to add new songs to an specific folder
@@ -405,6 +418,7 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         if(!player.isPlaying())
             player.release()
+        unregisterBroadcastReceiver()
     }
 
     override fun onBackPressed() {
@@ -504,6 +518,61 @@ class MainActivity : AppCompatActivity() {
                 return
             }
         }
+    }
+
+    private val broadcastReceiver = object : BroadcastReceiver() {
+        @SuppressLint("StringFormatInvalid")
+        override fun onReceive(context: Context, intent: Intent) {
+            // Get extra data included in the Intent
+            val status = intent.getStringExtra(PlayerService.STATUS)
+            //val code = intent.getIntExtra(BackupService.CODE, 0)
+            Log.i("Darwincio_del", "BroadcastReceiver: OnReceive")
+            when (status) {
+                PlayerService.STATUS_COMPLETED  //The playing has finished
+                -> {
+                    Log.i("Darwincio", "Playing has completed")
+                    return
+                }
+
+                PlayerService.STATUS_PROGRESS    //The service is sednding the progress
+                -> {
+                    Log.i("Darwincio", "Status progress")
+                    return
+                }
+            }
+        }
+    }
+
+    //Register the broadcast receiver that will receive the progress of the backup
+    private fun registerBroadcastReceiver() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            broadcastReceiver, IntentFilter(PlayerService.INTENT_FROM_SERVICE)
+        )
+    }
+
+    private fun unregisterBroadcastReceiver() {
+        try {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
+        } catch (e: Exception) {
+            Log.i("Darwincio", "Error msg: e = " + e.message)
+        }
+    }
+
+    fun startPlayerService() {
+        val serviceIntent = Intent(this, PlayerService::class.java)
+        //serviceIntent.putExtra(PlayerService.PLAYER_CMD, action)
+        ContextCompat.startForegroundService(this, serviceIntent)
+    }
+
+    //Functions to be executed on the server
+    fun startPlaylistOnService(playlist: List<Song>): Unit {
+        val playlist = ArrayList(playlist)  //Convert list to arrayList (in order it be serializable)
+        val serviceIntent = Intent(this, PlayerService::class.java)
+        serviceIntent.putExtra(PlayerService.PLAYER_CMD, PlayerService.CMD_START_PLAYLIST)
+        //serviceIntent.putExtra(PlayerService.PLAYLIST, playlist)
+        //serviceIntent.putParcelableArrayListExtra("playlist", playlist)
+        serviceIntent.putExtra("playlist", playlist)
+        ContextCompat.startForegroundService(this, serviceIntent)
     }
 
     //Interface to communicate te text query to the fragment who implement it

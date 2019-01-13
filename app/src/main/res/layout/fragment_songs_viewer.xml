@@ -37,6 +37,7 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             app:backgroundTint="@color/aqua_dark"
+            app:fabCustomSize="56dp"
             android:clickable="true" app:srcCompat="@drawable/ic_folder_24dp"
             android:id="@+id/folders" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="16dp" android:layout_marginRight="16dp" android:layout_marginBottom="16dp"

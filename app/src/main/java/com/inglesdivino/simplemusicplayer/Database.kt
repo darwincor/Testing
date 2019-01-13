@@ -1,9 +1,11 @@
 package com.inglesdivino.simplemusicplayer
 
 import android.content.Context
+import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import org.jetbrains.annotations.NotNull
+import java.io.Serializable
 
 //ENTITIES
 @Entity
@@ -15,13 +17,13 @@ data class Folder(
 )
 
 @Entity
-data class Song(
+data class Song(    //todo see how to make it parcelable (see an example in kotlin and try to do the same wit this. It's necesari to pass this info to the Service)
     @PrimaryKey(autoGenerate = true) var id: Int,
     @NotNull var id_folder: Int,
     var media_id: Long,
     var name: String,
     var path: String
-)
+): Serializable
 
 @Dao
 interface FolderDao{
